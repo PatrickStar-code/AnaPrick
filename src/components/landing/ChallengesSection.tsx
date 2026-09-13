@@ -1,147 +1,163 @@
-"use client"
+"use client";
 
-import { motion } from "framer-motion"
+import { motion } from "framer-motion";
+import { CornerDownRight } from "lucide-react";
+
+const EASE: [number, number, number, number] = [0.22, 1, 0.36, 1];
 
 const fadeUp = {
-  hidden: { opacity: 0, y: 40 },
-  show: { opacity: 1, y: 0, transition: { duration: 0.7, ease: "easeOut" as const } },
-}
+  hidden: { opacity: 0, y: 24 },
+  show: (i: number) => ({
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.7, delay: i * 0.08, ease: EASE },
+  }),
+};
 
+/* Cada dor, escrita com a voz de quem sente ela */
 const challenges = [
   {
-    icon: (
-      <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-      </svg>
-    ),
-    title: "Processos Manuais",
-    pain: "Horas perdidas em tarefas repetitivas e erros humanos.",
-    solution: "Automação Inteligente",
-    solutionDetail: "Simplifique as operações com fluxos de trabalho baseados em IA que eliminam gargalos.",
+    quote: "Perdemos horas todo dia com tarefas repetitivas.",
+    solution: "Automação inteligente",
+    detail: "Fluxos que eliminam gargalos e devolvem o tempo do seu time.",
   },
   {
-    icon: (
-      <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
-      </svg>
-    ),
-    title: "Sistemas Desconectados",
-    pain: "Dados presos em silos impedem decisões em tempo real.",
-    solution: "Plataformas Unificadas",
-    solutionDetail: "Arquitetura centralizada que conecta cada parte do seu negócio.",
+    quote: "Nossos sistemas não conversam entre si.",
+    solution: "Plataformas unificadas",
+    detail: "Uma arquitetura que conecta cada parte da operação.",
   },
   {
-    icon: (
-      <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-      </svg>
-    ),
-    title: "Operações Lentas",
-    pain: "Infraestrutura legada que não consegue acompanhar a demanda.",
-    solution: "Desempenho em Tempo Real",
-    solutionDetail: "Sistemas de alta velocidade projetados para tempos de resposta de milissegundos.",
+    quote: "Tudo trava justamente quando a demanda cresce.",
+    solution: "Desempenho em tempo real",
+    detail: "Sistemas rápidos, com resposta em milissegundos.",
   },
   {
-    icon: (
-      <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-      </svg>
-    ),
-    title: "Experiência de Usuário Ruim",
-    pain: "Os clientes vão embora devido a atritos e confusão.",
-    solution: "Interfaces Intuitivas",
-    solutionDetail: "Design centrado no ser humano que converte visitantes em usuários fiéis.",
+    quote: "Os clientes desistem antes de chegar ao fim.",
+    solution: "Interfaces intuitivas",
+    detail: "Design centrado em pessoas, feito para converter.",
   },
   {
-    icon: (
-      <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M13 10V3L4 14h7v7l9-11h-7z" />
-      </svg>
-    ),
-    title: "Gargalos de Crescimento",
-    pain: "O crescimento trava seus sistemas quando você mais precisa deles.",
-    solution: "Arquitetura Elástica",
-    solutionDetail: "Infraestrutura nativa em nuvem que escala automaticamente com a demanda.",
+    quote: "A infraestrutura não acompanha o nosso crescimento.",
+    solution: "Arquitetura elástica",
+    detail: "Nuvem nativa que escala junto com a demanda.",
   },
   {
-    icon: (
-      <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-      </svg>
-    ),
-    title: "Silos de Dados",
-    pain: "Informações dispersas bloqueiam a visibilidade estratégica.",
-    solution: "Inteligência Centralizada",
-    solutionDetail: "Painéis e relatórios unificados para total transparência.",
+    quote: "Cada área tem “sua” verdade — e nenhuma bate.",
+    solution: "Inteligência centralizada",
+    detail: "Painéis unificados, uma única fonte de verdade.",
   },
-]
-
-function ChallengeCard({
-  icon,
-  title,
-  pain,
-  solution,
-  solutionDetail,
-  delay,
-}: (typeof challenges)[0] & { delay: number }) {
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 30 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      transition={{ duration: 0.6, delay }}
-      whileHover={{ y: -4 }}
-      className="group glass rounded-2xl p-8 hover:border-[#33BCE4]/30 transition-all duration-500 cursor-default border border-white/8"
-    >
-      <div className="w-12 h-12 rounded-xl bg-white/5 flex items-center justify-center mb-6 text-[#33BCE4] group-hover:scale-110 transition-transform duration-300">
-        {icon}
-      </div>
-      <h3 className="text-xl font-bold text-white mb-2 group-hover:text-[#33BCE4] transition-colors">
-        {title}
-      </h3>
-      <p className="text-slate-400 text-sm">{pain}</p>
-      <motion.div
-        initial={false}
-        className="mt-6 pt-6 border-t border-white/10 overflow-hidden"
-        animate={{ opacity: 0, y: 8 }}
-        whileHover={{ opacity: 1, y: 0 }}
-      >
-        <p className="text-[#21CFE5] text-sm font-semibold mb-1">{solution}</p>
-        <p className="text-slate-300 text-xs">{solutionDetail}</p>
-      </motion.div>
-    </motion.div>
-  )
-}
+];
 
 export function ChallengesSection() {
   return (
-    <section
-      id="challenges"
-      className="relative py-32 px-6 overflow-hidden bg-[#0A2956]"
-    >
-      <div className="absolute inset-0 bg-gradient-to-b from-[#0A2956] via-[#0d3272]/30 to-[#0A2956] pointer-events-none" />
-      <div className="max-w-7xl mx-auto relative z-10">
-        <motion.div
-          variants={fadeUp}
-          initial="hidden"
-          whileInView="show"
-          viewport={{ once: true }}
-          className="text-center mb-20"
-        >
-          <h2 className="text-3xl md:text-5xl font-bold text-white mb-4">
-            Problemas que Resolvemos
-          </h2>
-          <p className="text-slate-400 max-w-xl mx-auto">
-            Barreiras comuns que impedem as empresas de crescer.
-          </p>
-        </motion.div>
+    <section id="challenges" className="relative px-6 py-28 sm:px-10 lg:py-36">
+      <div className="mx-auto grid w-full max-w-6xl gap-16 lg:grid-cols-[minmax(0,2fr)_minmax(0,3fr)] lg:gap-20">
+        {/* Coluna de título — sticky no desktop */}
+        <div className="self-start lg:sticky lg:top-32">
+          <motion.div
+            variants={fadeUp}
+            initial="hidden"
+            whileInView="show"
+            viewport={{ once: true }}
+            custom={0}
+          >
+            <div className="mb-7 flex items-center gap-3">
+              <span className="h-px w-10 bg-[#33BCE4]/60" />
+              <span className="text-xs font-semibold uppercase tracking-[0.3em] text-[#33BCE4]">
+                O que a gente resolve
+              </span>
+            </div>
+          </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {challenges.map((c, i) => (
-            <ChallengeCard key={c.title} {...c} delay={i * 0.08} />
-          ))}
+          <motion.h2
+            variants={fadeUp}
+            initial="hidden"
+            whileInView="show"
+            viewport={{ once: true }}
+            custom={1}
+            className="text-4xl font-semibold leading-[1.1] tracking-tight text-white sm:text-5xl"
+          >
+            Reconhece{" "}
+            <em className="font-serif italic text-[#33BCE4]">algum</em> desses?
+          </motion.h2>
+
+          <motion.p
+            variants={fadeUp}
+            initial="hidden"
+            whileInView="show"
+            viewport={{ once: true }}
+            custom={2}
+            className="mt-6 max-w-sm text-base leading-relaxed text-slate-400"
+          >
+            Não faltam nomes bonitos para esses problemas — falta alguém para
+            sentar do seu lado e resolver. A gente começa sempre pelo que dói
+            hoje.
+          </motion.p>
+        </div>
+
+        {/* Lista-diálogo */}
+        <div>
+          <ul className="divide-y divide-white/[0.07] border-t border-white/[0.07]">
+            {challenges.map((c, i) => (
+              <motion.li
+                key={c.solution}
+                variants={fadeUp}
+                initial="hidden"
+                whileInView="show"
+                viewport={{ once: true, margin: "-60px" }}
+                custom={Math.min(i, 3)}
+                className="group py-8 transition-transform duration-500 ease-out lg:hover:translate-x-2"
+              >
+                <span className="text-[11px] font-semibold tracking-[0.25em] text-slate-500 transition-colors duration-300 group-hover:text-[#33BCE4]">
+                  {String(i + 1).padStart(2, "0")}
+                </span>
+
+                <p className="mt-3 max-w-md font-serif text-xl italic leading-snug text-slate-300 transition-colors duration-300 group-hover:text-white sm:text-2xl">
+                  “{c.quote}”
+                </p>
+
+                <div className="mt-4 flex items-start gap-2.5 pl-0.5">
+                  <CornerDownRight className="mt-0.5 h-4 w-4 shrink-0 text-[#33BCE4]/70" />
+                  <p className="text-sm leading-relaxed text-slate-400">
+                    <span className="font-semibold text-[#33BCE4]">
+                      {c.solution}
+                    </span>
+                    {" — "}
+                    {c.detail}
+                  </p>
+                </div>
+              </motion.li>
+            ))}
+          </ul>
+
+          {/* Footnote humano + CTA */}
+          <motion.div
+            variants={fadeUp}
+            initial="hidden"
+            whileInView="show"
+            viewport={{ once: true }}
+            custom={2}
+            className="mt-10 flex flex-col items-start gap-4 sm:flex-row sm:items-center sm:justify-between"
+          >
+            <p className="max-w-sm text-sm italic text-slate-500">
+              Se você assentiu com a cabeça lendo mais de um item acima… a gente
+              deveria conversar.
+            </p>
+            <a
+              href="#contact"
+              className="group inline-flex items-center gap-2 text-sm font-semibold text-[#33BCE4] underline decoration-[#33BCE4]/30 underline-offset-8 transition-colors hover:decoration-[#33BCE4]"
+            >
+              Vamos conversar
+              <span
+                aria-hidden
+                className="transition-transform duration-300 group-hover:translate-x-1"
+              >
+                →
+              </span>
+            </a>
+          </motion.div>
         </div>
       </div>
     </section>
-  )
+  );
 }

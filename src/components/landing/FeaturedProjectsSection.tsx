@@ -1,191 +1,255 @@
-"use client"
+"use client";
 
-import { motion } from "framer-motion"
+import Image from "next/image";
+import { useState } from "react";
+import { AnimatePresence, motion } from "framer-motion";
+import { ArrowUpRight } from "lucide-react";
+import { cn } from "@/lib/utils";
+
+const EASE: [number, number, number, number] = [0.22, 1, 0.36, 1];
+
+const fadeUp = {
+  hidden: { opacity: 0, y: 24 },
+  show: (i: number) => ({
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.7, delay: i * 0.08, ease: EASE },
+  }),
+};
+
+const GRAIN =
+  "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E\")";
 
 type Project = {
-  tag: string
-  tagColor: string
-  title: string
-  desc: string
-  features: string[]
-  stat1: { value: string; label: string }
-  stat2: { value: string; label: string }
-  mockLabel: string
-  mockStatus: string
-  mockIcon: React.ReactNode
-  accentColor: string
-  imageRight: boolean
-}
-
-const MapIcon = () => (
-  <svg className="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 7m0 13V7" />
-  </svg>
-)
-const LockIcon = () => (
-  <svg className="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-  </svg>
-)
-const BookIcon = () => (
-  <svg className="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-  </svg>
-)
-
+  id: string;
+  client: string;
+  statement: string;
+  detail: string;
+  meta: string;
+  href: string;
+  monogram: string;
+  image?: { src: string; alt: string };
+};
 const projects: Project[] = [
   {
-    tag: "Logística",
-    tagColor: "#33BCE4",
-    title: "Plataforma de Logística Nova",
-    desc: "Uma solução completa de cadeia de suprimentos que reduziu os custos operacionais em 40% e automatizou decisões manuais de roteamento em 12 centros de distribuição.",
-    features: ["Fluxos de trabalho de despacho automatizados", "Rastreamento de frota em tempo real", "Alertas de manutenção preditiva"],
-    stat1: { value: "40%", label: "Redução de Custos" },
-    stat2: { value: "3x", label: "Entrega Mais Rápida" },
-    mockLabel: "TELA HOLOGRÁFICA",
-    mockStatus: "● ATIVA",
-    mockIcon: <MapIcon />,
-    accentColor: "#33BCE4",
-    imageRight: true,
+    id: "01",
+    client: "Magno Barbearia",
+    statement: "Do caderno de marcação à agenda que se preenche sozinha.",
+    detail:
+      "endereço online, horários em um clique no WhatsApp e zero furo por esquecimento.",
+    meta: "2026 · landing page",
+    href: "https://magnobarbearias.vercel.app/",
+    monogram: "MB",
+    image: {
+      src: "/projetos/magno.png",
+      alt: "Página inicial do site da Magno Barbearia, com foto do espaço e botão de agendamento",
+    },
   },
   {
-    tag: "Finanças",
-    tagColor: "#F98F23",
-    title: "FinVault Core",
-    desc: "Uma infraestrutura de neobanking que atende a mais de 2 milhões de contas com segurança de nível militar e processamento de transações em menos de um segundo.",
-    features: ["Arquitetura em conformidade com SOC 2 Tipo II", "Integração de usuários com maior conversão", "Detecção de fraudes em tempo real"],
-    stat1: { value: "2M+", label: "Contas Ativas" },
-    stat2: { value: "60%", label: "Aumento de Conversão" },
-    mockLabel: "TERMINAL SEGURO",
-    mockStatus: "● CRIPTOGRAFADO",
-    mockIcon: <LockIcon />,
-    accentColor: "#F98F23",
-    imageRight: false,
+    id: "02",
+    client: "Estúdio 332",
+    statement: "As fotos falam — o site só dá o palco.",
+    detail: "galeria em destaque e orçamento a um clique, sem distração.",
+    meta: "2026 · landing page",
+    href: "https://estudio332.vercel.app/",
+    monogram: "332",
+    image: {
+      src: "/projetos/estudio_332.png",
+      alt: "Página inicial do site do Estúdio 332, com galeria de fotografias e apresentação do estúdio",
+    },
   },
-  {
-    tag: "Educação",
-    tagColor: "#21CFE5",
-    title: "EduCloud LMS",
-    desc: "Uma plataforma de aprendizagem colaborativa que atende a mais de 500 mil alunos com caminhos adaptativos e análise de progresso em tempo real para instituições.",
-    features: ["Caminhos de aprendizagem adaptativos", "Salas de aula colaborativas ao vivo", "Melhoria na retenção de alunos"],
-    stat1: { value: "500K+", label: "Alunos" },
-    stat2: { value: "94%", label: "Taxa de Retenção" },
-    mockLabel: "NÓ DE APRENDIZAGEM",
-    mockStatus: "● ATIVO",
-    mockIcon: <BookIcon />,
-    accentColor: "#21CFE5",
-    imageRight: true,
-  },
-]
-
-function MonitorFrame({ label, status, icon, accent }: { label: string; status: string; icon: React.ReactNode; accent: string }) {
-  return (
-    <div className="monitor-frame rounded-2xl p-4 relative overflow-hidden">
-      <div className="absolute inset-0 hologram-overlay z-10" />
-      <div
-        className="aspect-video rounded-lg flex items-center justify-center relative overflow-hidden"
-        style={{ background: "linear-gradient(135deg, #0A2956, #020c1f)" }}
-      >
-        <div className="absolute inset-0 opacity-30">
-          <div className="absolute top-1/4 left-1/4 w-32 h-32 rounded-full blur-3xl" style={{ background: accent + "33" }} />
-        </div>
-        <div className="relative z-10 text-center">
-          <div className="font-mono text-xs mb-2 tracking-widest" style={{ color: accent, fontFamily: "var(--font-mono)" }}>
-            {label}
-          </div>
-          <div
-            className="w-48 h-32 rounded backdrop-blur-sm flex items-center justify-center"
-            style={{ border: `1px solid ${accent}4d`, background: accent + "0d" }}
-          >
-            <div style={{ color: accent + "80" }}>{icon}</div>
-          </div>
-        </div>
-      </div>
-      <div className="mt-4 flex items-center justify-between text-xs text-slate-500" style={{ fontFamily: "var(--font-mono)" }}>
-        <span>{label.replace(" ", "_").toUpperCase()}</span>
-        <span style={{ color: accent }}>{status}</span>
-      </div>
-    </div>
-  )
-}
-
+];
 export function FeaturedProjectsSection() {
+  /* Sempre há um projeto visível: começa no 01 e o mouse apenas troca */
+  const [active, setActive] = useState(0);
+  const activeProject = projects[active];
+
   return (
-    <section
-      id="work"
-      className="relative py-32 px-6 overflow-hidden"
-      style={{ background: "linear-gradient(180deg, #0A2956, #071a3d, #0A2956)" }}
-    >
-      <div className="max-w-7xl mx-auto">
+    <section id="work" className="relative px-6 py-28 sm:px-10 lg:py-36">
+      <div className="mx-auto w-full max-w-6xl">
+        {/* Cabeçalho — igual ao anterior */}
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
+          variants={fadeUp}
+          initial="hidden"
+          whileInView="show"
           viewport={{ once: true }}
-          transition={{ duration: 0.8 }}
-          className="text-center mb-24"
+          custom={0}
         >
-          <h2 className="text-3xl md:text-5xl font-bold text-white mb-4">Projetos em Destaque</h2>
-          <p className="text-slate-400 max-w-xl mx-auto">Resultados que falam mais alto que tecnologias.</p>
+          <div className="mb-7 flex items-center gap-3">
+            <span className="h-px w-10 bg-[#33BCE4]/60" />
+            <span className="text-xs font-semibold uppercase tracking-[0.3em] text-[#33BCE4]">
+              Trabalhos selecionados
+            </span>
+          </div>
         </motion.div>
 
-        <div className="space-y-32">
-          {projects.map((proj, idx) => (
-            <motion.div
-              key={proj.title}
-              initial={{ opacity: 0, y: 40 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.8 }}
-              className="grid md:grid-cols-2 gap-12 items-center"
-            >
-              {/* Text */}
-              <div className={proj.imageRight ? "order-2 md:order-1" : "order-2"}>
-                <div
-                  className="inline-flex items-center gap-2 px-3 py-1 rounded-full glass text-xs font-semibold mb-4"
-                  style={{ color: proj.tagColor }}
+        <motion.h2
+          variants={fadeUp}
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true }}
+          custom={1}
+          className="text-4xl font-semibold leading-[1.1] tracking-tight text-white sm:text-5xl"
+        >
+          Poucos projetos,{" "}
+          <em className="font-serif italic text-[#33BCE4]">inteiros</em>.
+        </motion.h2>
+
+        <div className="mt-12 grid gap-12 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)] lg:gap-16">
+          {/* Lista — igual à anterior */}
+          <motion.ul
+            variants={fadeUp}
+            initial="hidden"
+            whileInView="show"
+            viewport={{ once: true }}
+            custom={2}
+            className="self-start border-t border-white/[0.07]"
+          >
+            {projects.map((p, i) => (
+              <li key={p.id} className="border-b border-white/[0.07]">
+                <a
+                  href={p.href}
+                  onMouseEnter={() => setActive(i)}
+                  onFocus={() => setActive(i)}
+                  onBlur={() => setActive(0)}
+                  aria-current={active === i ? "true" : undefined}
+                  className="group block py-6 sm:py-7"
                 >
-                  {proj.tag}
-                </div>
-                <h3 className="text-3xl md:text-4xl font-bold text-white mb-6">{proj.title}</h3>
-                <p className="text-slate-300 text-lg mb-8 leading-relaxed">{proj.desc}</p>
-                <div className="space-y-3 mb-8">
-                  {proj.features.map((f) => (
-                    <div key={f} className="flex items-center gap-3 text-slate-300 text-sm">
-                      <div className="w-1.5 h-1.5 rounded-full shrink-0" style={{ background: proj.accentColor }} />
-                      {f}
-                    </div>
-                  ))}
-                </div>
-                <div className="flex items-center gap-6">
-                  <div>
-                    <div className="text-2xl font-bold text-white">{proj.stat1.value}</div>
-                    <div className="text-xs text-slate-400 uppercase tracking-wider">{proj.stat1.label}</div>
+                  <div className="flex items-baseline gap-4">
+                    <span
+                      className={cn(
+                        "text-[11px] font-semibold tracking-[0.25em] transition-colors duration-300",
+                        active === i ? "text-[#33BCE4]" : "text-slate-500",
+                      )}
+                    >
+                      {p.id}
+                    </span>
+                    <h3
+                      className={cn(
+                        "text-2xl font-semibold tracking-tight transition-all duration-500 ease-out sm:text-3xl",
+                        active === i
+                          ? "translate-x-1.5 text-[#33BCE4]"
+                          : "text-white",
+                      )}
+                    >
+                      {p.client}
+                    </h3>
                   </div>
-                  <div className="w-px h-10 bg-white/10" />
-                  <div>
-                    <div className="text-2xl font-bold text-white">{proj.stat2.value}</div>
-                    <div className="text-xs text-slate-400 uppercase tracking-wider">{proj.stat2.label}</div>
-                  </div>
+                  <p className="mt-1.5 pl-9 text-sm leading-snug text-slate-400 sm:text-[15px]">
+                    {p.statement}{" "}
+                    <span className="text-slate-500">{p.detail}</span>
+                  </p>
+                </a>
+              </li>
+            ))}
+          </motion.ul>
+
+          {/* Painel — mockup de navegador, legenda fora da tela */}
+          <motion.div
+            variants={fadeUp}
+            initial="hidden"
+            whileInView="show"
+            viewport={{ once: true }}
+            custom={3}
+            className="self-start lg:sticky lg:top-32"
+          >
+            <div className="overflow-hidden rounded-2xl border border-white/10 bg-[#0b1e3f] shadow-2xl shadow-black/40">
+              {/* Chrome do navegador */}
+              <div className="flex items-center gap-3 border-b border-white/[0.06] bg-white/[0.03] px-4 py-2.5">
+                <div className="flex gap-1.5" aria-hidden>
+                  <span className="h-2.5 w-2.5 rounded-full bg-white/15" />
+                  <span className="h-2.5 w-2.5 rounded-full bg-white/15" />
+                  <span className="h-2.5 w-2.5 rounded-full bg-white/15" />
                 </div>
+                <div className="flex-1 truncate rounded-md bg-white/[0.04] px-3 py-1 text-center text-[11px] text-slate-400">
+                  {new URL(activeProject.href).hostname}
+                </div>
+                <span className="w-[52px]" aria-hidden />
               </div>
 
-              {/* Monitor */}
-              <motion.div
-                className={proj.imageRight ? "order-1 md:order-2" : "order-1"}
-                whileHover={{ rotateY: proj.imageRight ? 6 : -6 }}
-                style={{ perspective: 1000 }}
-              >
-                <MonitorFrame
-                  label={proj.mockLabel}
-                  status={proj.mockStatus}
-                  icon={proj.mockIcon}
-                  accent={proj.accentColor}
-                />
-              </motion.div>
-            </motion.div>
-          ))}
+              {/* Tela */}
+              <div className="relative aspect-[16/10]">
+                <AnimatePresence mode="wait">
+                  <motion.div
+                    key={activeProject.id}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.35, ease: EASE }}
+                    className="absolute inset-0"
+                  >
+                    {activeProject.image ? (
+                      <Image
+                        src={activeProject.image.src}
+                        alt={activeProject.image.alt}
+                        fill
+                        priority={activeProject.id === "01"}
+                        sizes="(max-width: 1024px) 100vw, 45vw"
+                        className="object-cover object-top"
+                      />
+                    ) : (
+                      <>
+                        <div className="absolute inset-0 bg-gradient-to-br from-[#0d3272] via-[#0A2956] to-[#071a3d]" />
+                        <span className="absolute inset-0 grid place-items-center font-serif text-8xl italic text-white/10">
+                          {activeProject.monogram}
+                        </span>
+                      </>
+                    )}
+                    <div
+                      className="pointer-events-none absolute inset-0 opacity-[0.05] mix-blend-overlay"
+                      style={{ backgroundImage: GRAIN }}
+                    />
+                  </motion.div>
+                </AnimatePresence>
+              </div>
+            </div>
+
+            {/* Legenda — fora da imagem, nada colide */}
+            <div className="mt-4 flex items-start justify-between gap-4">
+              <div>
+                <p className="text-base font-semibold text-white">
+                  {activeProject.client}
+                </p>
+                <p className="mt-0.5 text-sm leading-snug text-slate-400">
+                  {activeProject.statement}
+                </p>
+              </div>
+              <span className="mt-0.5 shrink-0 text-xs text-slate-500">
+                {activeProject.meta}
+              </span>
+            </div>
+
+            <p className="mt-3 text-xs text-slate-500">
+              passe o mouse pelos projetos ao lado para trocar o preview
+            </p>
+          </motion.div>
         </div>
+
+        {/* Fechamento — igual ao anterior */}
+        <motion.div
+          variants={fadeUp}
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true }}
+          className="mt-12 flex flex-col gap-3 border-t border-white/[0.07] pt-8 sm:flex-row sm:items-center sm:justify-between"
+        >
+          <p className="text-sm italic text-slate-500">
+            Há espaço para o próximo nome dessa lista.
+          </p>
+          <a
+            href="#contact"
+            className="group inline-flex items-center gap-2 text-sm font-semibold text-[#33BCE4] underline decoration-[#33BCE4]/30 underline-offset-8 transition-colors hover:decoration-[#33BCE4]"
+          >
+            ser o próximo
+            <span
+              aria-hidden
+              className="transition-transform duration-300 group-hover:translate-x-1"
+            >
+              →
+            </span>
+          </a>
+        </motion.div>
       </div>
     </section>
-  )
+  );
 }

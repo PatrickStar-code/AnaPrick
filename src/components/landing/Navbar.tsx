@@ -1,31 +1,31 @@
-"use client"
+"use client";
 
-import { useState, useEffect } from "react"
-import { motion, AnimatePresence } from "framer-motion"
-import { Menu, X } from "lucide-react"
-import { cn } from "@/lib/utils"
+import { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Menu, X } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 const links = [
   { href: "#challenges", label: "Desafios" },
   { href: "#process", label: "Processo" },
   { href: "#work", label: "Projetos" },
   { href: "#about", label: "Sobre" },
-]
+];
 
 export function Navbar() {
-  const [visible, setVisible] = useState(true)
-  const [lastY, setLastY] = useState(0)
-  const [mobileOpen, setMobileOpen] = useState(false)
+  const [visible, setVisible] = useState(true);
+  const [lastY, setLastY] = useState(0);
+  const [mobileOpen, setMobileOpen] = useState(false);
 
   useEffect(() => {
     const onScroll = () => {
-      const current = window.scrollY
-      setVisible(current < lastY || current < 100)
-      setLastY(current)
-    }
-    window.addEventListener("scroll", onScroll, { passive: true })
-    return () => window.removeEventListener("scroll", onScroll)
-  }, [lastY])
+      const current = window.scrollY;
+      setVisible(current < lastY || current < 100);
+      setLastY(current);
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, [lastY]);
 
   return (
     <motion.nav
@@ -36,7 +36,10 @@ export function Navbar() {
       <div className="mx-auto max-w-7xl px-4 sm:px-6 pt-4">
         <div className="flex items-center justify-between rounded-2xl glass px-6 py-3">
           {/* Logo */}
-          <a href="#hero" className="text-xl font-bold tracking-tight text-white flex items-center gap-2">
+          <a
+            href="#hero"
+            className="text-xl font-bold tracking-tight text-white flex items-center gap-2"
+          >
             <div className="w-8 h-8 rounded-lg bg-[#33BCE4] flex items-center justify-center text-[#0A2956] font-black text-sm">
               A
             </div>
@@ -71,7 +74,11 @@ export function Navbar() {
             className="md:hidden text-white p-2"
             aria-label="Toggle menu"
           >
-            {mobileOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+            {mobileOpen ? (
+              <X className="w-6 h-6" />
+            ) : (
+              <Menu className="w-6 h-6" />
+            )}
           </button>
         </div>
 
@@ -105,5 +112,5 @@ export function Navbar() {
         </AnimatePresence>
       </div>
     </motion.nav>
-  )
+  );
 }

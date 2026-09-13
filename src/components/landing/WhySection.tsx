@@ -1,103 +1,138 @@
-"use client"
+"use client";
 
-import { motion } from "framer-motion"
+import { motion } from "framer-motion";
 
-const reasons = [
+const EASE: [number, number, number, number] = [0.22, 1, 0.36, 1];
+
+const fadeUp = {
+  hidden: { opacity: 0, y: 24 },
+  show: (i: number) => ({
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.7, delay: i * 0.08, ease: EASE },
+  }),
+};
+
+const principles = [
   {
-    title: "Foco em Resultados de Negócio",
-    desc: "Alinhamos as decisões de engenharia aos seus KPIs, não apenas a preferências técnicas.",
-    icon: (
-      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-      </svg>
-    ),
+    title: "Resultado antes de tecnologia",
+    desc: "Cada decisão de engenharia responde a um número seu: custo, conversão, tempo de entrega. O resto é preferência.",
   },
   {
-    title: "Arquitetura Escalável",
-    desc: "Sistemas projetados para crescer de 1.000 para 10.000.000 de usuários sem necessidade de reescrita.",
-    icon: (
-      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
-      </svg>
-    ),
+    title: "Arquitetura para o volume de amanhã",
+    desc: "Sistemas que crescem de mil para milhões de usuários sem precisar ser reescritos no caminho.",
   },
   {
-    title: "Experiência de Usuário Excepcional",
-    desc: "Interfaces pixel-perfect validadas por testes rigorosos de usabilidade.",
-    icon: (
-      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-      </svg>
-    ),
+    title: "Segurança e performance de fábrica",
+    desc: "Auditoria, testes e carregamento abaixo de 1 segundo fazem parte do padrão — não do upsell.",
   },
   {
-    title: "Parceria de Longo Prazo",
-    desc: "Acompanhamos você com suporte contínuo, otimização e orientação estratégica.",
-    icon: (
-      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-      </svg>
-    ),
+    title: "Parceria que não acaba no deploy",
+    desc: "A gente fica por perto: suporte, otimização e orientação enquanto o produto cresce.",
   },
-  {
-    title: "Segurança por Design",
-    desc: "Auditorias de segurança, testes de invasão e conformidade integrados desde o primeiro dia.",
-    icon: (
-      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-      </svg>
-    ),
-  },
-  {
-    title: "Alto Desempenho",
-    desc: "Tempos de carregamento abaixo de um segundo e interações fluidas em qualquer dispositivo.",
-    icon: (
-      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
-      </svg>
-    ),
-  },
-]
+];
+
+/* Ajuste para a realidade de vocês */
+const meta = [
+  { label: "onde estamos", value: "São Paulo, Brasil" },
+  { label: "tempo de resposta", value: "até 1 dia útil" },
+  { label: "idiomas", value: "português · inglês" },
+];
 
 export function WhySection() {
   return (
-    <section
-      id="about"
-      className="relative py-32 px-6"
-      style={{ background: "linear-gradient(180deg, #0A2956, #081d42, #0A2956)" }}
-    >
-      <div className="max-w-7xl mx-auto">
+    <section id="about" className="relative px-6 py-28 sm:px-10 lg:py-36">
+      <div className="mx-auto w-full max-w-6xl">
+        {/* Kicker */}
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
+          variants={fadeUp}
+          initial="hidden"
+          whileInView="show"
           viewport={{ once: true }}
-          transition={{ duration: 0.8 }}
-          className="text-center mb-20"
+          custom={0}
         >
-          <h2 className="text-3xl md:text-5xl font-bold text-white mb-4">Por que Nos Escolher</h2>
-          <p className="text-slate-400 max-w-xl mx-auto">Pensamos diferente. Entregamos resultados.</p>
+          <div className="mb-7 flex items-center gap-3">
+            <span className="h-px w-10 bg-[#33BCE4]/60" />
+            <span className="text-xs font-semibold uppercase tracking-[0.3em] text-[#33BCE4]">
+              Sobre o estúdio
+            </span>
+          </div>
         </motion.div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {reasons.map((r, i) => (
+        {/* Manifesto */}
+        <motion.h2
+          variants={fadeUp}
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true }}
+          custom={1}
+          className="max-w-4xl text-3xl font-semibold leading-[1.15] tracking-tight text-white sm:text-4xl lg:text-5xl"
+        >
+          Não somos fábrica de software. Somos o time que{" "}
+          <em className="font-serif italic text-[#33BCE4]">
+            entra no seu time
+          </em>{" "}
+          — pergunta, ouve, discorda quando precisa.
+        </motion.h2>
+
+        <motion.p
+          variants={fadeUp}
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true }}
+          custom={2}
+          className="mt-7 max-w-2xl text-base leading-relaxed text-slate-400"
+        >
+          Escolhemos projetos onde podemos dividir o risco com quem está do
+          outro lado da mesa. É por isso que a maioria das parcerias que começou
+          com um MVP continua até hoje — o produto cresce, e a gente cresce
+          junto.
+        </motion.p>
+
+        {/* Linha humana */}
+        <motion.dl
+          variants={fadeUp}
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true }}
+          custom={3}
+          className="mt-12 flex flex-wrap gap-x-10 gap-y-5"
+        >
+          {meta.map((m) => (
+            <div key={m.label} className="flex items-baseline gap-2.5">
+              <dt className="text-[11px] font-semibold uppercase tracking-[0.2em] text-slate-500">
+                {m.label}
+              </dt>
+              <dd className="text-sm font-medium text-slate-200">{m.value}</dd>
+            </div>
+          ))}
+        </motion.dl>
+
+        {/* Princípios — colunas de texto, sem caixa */}
+        <div className="mt-16 grid gap-x-8 gap-y-10 border-t border-white/[0.07] pt-12 sm:grid-cols-2 lg:grid-cols-4">
+          {principles.map((p, i) => (
             <motion.div
-              key={r.title}
-              initial={{ opacity: 0, scale: 0.95 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: i * 0.08 }}
-              whileHover={{ y: -4, backgroundColor: "rgba(255,255,255,0.08)" }}
-              className="group glass-strong rounded-2xl p-8 transition-all duration-500"
+              key={p.title}
+              variants={fadeUp}
+              initial="hidden"
+              whileInView="show"
+              viewport={{ once: true, margin: "-60px" }}
+              custom={Math.min(i, 3)}
+              className="group"
             >
-              <div className="w-10 h-10 rounded-lg bg-[#33BCE4]/20 flex items-center justify-center text-[#33BCE4] mb-6">
-                {r.icon}
-              </div>
-              <h3 className="text-lg font-bold text-white mb-3">{r.title}</h3>
-              <p className="text-slate-400 text-sm leading-relaxed">{r.desc}</p>
+              <p className="text-[11px] font-semibold tracking-[0.25em] text-slate-500 transition-colors duration-300 group-hover:text-[#33BCE4]">
+                {String(i + 1).padStart(2, "0")}
+              </p>
+              <h3 className="mt-3 text-base font-semibold leading-snug text-white">
+                {p.title}
+              </h3>
+              <p className="mt-2 text-sm leading-relaxed text-slate-400">
+                {p.desc}
+              </p>
             </motion.div>
           ))}
         </div>
       </div>
     </section>
-  )
+  );
 }
